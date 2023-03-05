@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 // how our document look like
 const loginSchema = mongoose.Schema({
@@ -16,14 +15,12 @@ const loginSchema = mongoose.Schema({
     }
 });
 
-loginSchema.pre("save", async function (next) {
-    if (this.isModified("password")) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-});
+
 
 loginSchema.methods.matchPassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    if (password === this.password)
+        return true
+    else return false
 };
 
 loginSchema.methods.generateToken = function () {
